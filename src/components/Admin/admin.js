@@ -1,4 +1,5 @@
 import React from 'react';
+import {withAuthorization} from "../Session";
 
 class AdminPage extends React.Component{
     render() {

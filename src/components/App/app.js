@@ -8,8 +8,8 @@ import SignUpPage from '../SignUp/sign-up';
 import SignInPage from '../SignIn/sign-in';
 import HomePage from '../Home/home';
 import AdminPage from '../Admin/admin';
+import AccountPage from '../Account/account';
 import * as ROUTES from '../../constants/routes';
-import {withFirebase} from '../Firebase';
 import {withAuthentication} from '../Session';
 
 const App = () => (
@@ -21,6 +21,7 @@ const App = () => (
             <Route path={ROUTES.SIGN_UP} component={SignUpPage}/>
             <Route path={ROUTES.SIGN_IN} component={SignInPage}/>
             <Route path={ROUTES.ADMIN} component={AdminPage}/>
+            <Route path={ROUTES.ACCOUNT} component={AccountPage}/>
         </div>
     </Router>
 );

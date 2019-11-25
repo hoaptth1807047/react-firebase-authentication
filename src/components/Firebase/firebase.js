@@ -1,5 +1,6 @@
 import app from 'firebase/app';
-import'firebase/auth'
+import 'firebase/auth'
+import 'firebase/firestore'
 
 const config = {
     apiKey: process.env.REACT_APP_API_KEY,
@@ -10,15 +11,23 @@ const config = {
     messagingSenderId: process.env.REACT_APP_MESSAGING_SENDER_ID,
     messagingAppId: process.env.REACT_APP_APP_ID,
 };
+
 class Firebase {
     constructor() {
         app.initializeApp(config);
         this.auth = app.auth();
+        this.db = app.firestore();
     }
+
+
+
     doCreateUserWithEmailAndPassword = (email, password) =>
         this.auth.createUserWithEmailAndPassword(email, password);
     doSignInWithEmailAndPassword = (email, password) =>
         this.auth.signInWithEmailAndPassword(email, password);
     doSignOut = () => this.auth.signOut();
+    user = uid => this.db.doc(`users/${uid}`);
+    users = () => this.db.collection('users');
 }
+
 export default Firebase;

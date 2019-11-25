@@ -1,11 +1,12 @@
-import React, { Component } from 'react';
-import { Link, withRouter } from 'react-router-dom';
-import { compose } from 'recompose';
+import React, {Component} from 'react';
+import {Link, withRouter} from 'react-router-dom';
+import {compose} from 'recompose';
 import {withFirebase} from '../Firebase';
 import * as ROUTES from '../../constants/routes';
+import '../Form/form.css'
+
 const SignUpPage = () => (
     <div>
-        <h1>SignUp</h1>
         <SignUpForm/>
     </div>
 );
@@ -19,26 +20,39 @@ const INITIAL_STATE = {
 };
 
 class SignUpFormBase extends Component {
+    firebase;
     constructor(props) {
         super(props);
-        this.state = { ...INITIAL_STATE };
+        this.state = {...INITIAL_STATE};
     }
+
     onSubmit = event => {
-        const { username, email, passwordOne } = this.state;
+        const {username, email,passwordOne} = this.state;
         this.props.firebase
             .doCreateUserWithEmailAndPassword(email, passwordOne)
             .then(authUser => {
-                this.setState({ ...INITIAL_STATE });
+                return this.props.firebase
+                    .user(authUser.user.uid)
+                    .set({
+                        username,
+                        email,
+                        passwordOne
+                    });
+            })
+            .then(() => {
+                this.setState({...INITIAL_STATE});
                 this.props.history.push(ROUTES.HOME)
             })
             .catch(error => {
-                this.setState({ error });
+                this.setState({error});
             });
+
         event.preventDefault();
     };
     onChange = event => {
-        this.setState({ [event.target.name]: event.target.value });
+        this.setState({[event.target.name]: event.target.value});
     };
+
     render() {
         const {
             username,
@@ -53,47 +67,63 @@ class SignUpFormBase extends Component {
             email === '' ||
             username === '';
         return (
-            <form onSubmit={this.onSubmit}>
-                <input
-                    name="username"
-                    value={username}
-                    onChange={this.onChange}
-                    type="text"
-                    placeholder="Full Name"
-                />
-                <input
-                    name="email"
-                    value={email}
-                    onChange={this.onChange}
-                    type="text"
-                    placeholder="Email Address"
-                />
-                <input
-                    name="passwordOne"
-                    value={passwordOne}
-                    onChange={this.onChange}
-                    type="password"
-                    placeholder="Password"
-                />
-                <input
-                    name="passwordTwo"
-                    value={passwordTwo}
-                    onChange={this.onChange}
-                    type="password"
-                    placeholder="Confirm Password"
-                />
-                <button disabled={isInvalid} type="submit">
-                    Sign Up</button>
-                {error && <p>{error.message}</p>}
+            <form onSubmit={this.onSubmit} className="container formCss">
+                <div className="headerTitle">
+                    <h2>Sign Up</h2>
+                </div>
+                <div className="form-group">
+                    <label>Full Name</label>
+                    <input
+                        className="form-control"
+                        name="username"
+                        value={this.state.username}
+                        onChange={this.onChange}
+                        type="text"
+                        placeholder="Full Name"
+                    />
+                </div>
+                <div className="form-group">
+                    <label>Email</label>
+                    <input
+                        className="form-control"
+                        name="email"
+                        value={this.state.email}
+                        onChange={this.onChange}
+                        type="text"
+                        placeholder="Email Address"
+                    />
+                </div>
+                <div className="form-group">
+                    <label>Password</label>
+                    <input
+                        className="form-control"
+                        name="passwordOne"
+                        value={this.state.passwordOne}
+                        onChange={this.onChange}
+                        type="password"
+                        placeholder="Password"
+                    />
+                </div>
+                <div className="form-group">
+                    <label>Confirm Password</label>
+                    <input
+                        className="form-control"
+                        name="passwordTwo"
+                        value={this.state.passwordTwo}
+                        onChange={this.onChange}
+                        type="password"
+                        placeholder="Confirm Password"
+                    />
+                </div>
+                <button disabled={isInvalid} type="submit" className="btn btn-primary">Submit</button>
+                <div>
+                    {error && <p>{error.message}</p>}
+                </div>
             </form>
         );
     }
 }
-const SignUpLink = () => (
-    <p>
-        Don't have an account? <Link to={ROUTES.SIGN_UP}>Sign Up</Link>
-    </p>
-);
-const SignUpForm = compose(withRouter,withFirebase)(SignUpFormBase);
+
+const SignUpForm = compose(withRouter, withFirebase)(SignUpFormBase);
 export default SignUpPage;
-export { SignUpForm, SignUpLink };
+export {SignUpForm};

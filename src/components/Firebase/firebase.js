@@ -19,14 +19,12 @@ class Firebase {
         this.db = app.firestore();
     }
 
-
-
     doCreateUserWithEmailAndPassword = (email, password) =>
         this.auth.createUserWithEmailAndPassword(email, password);
     doSignInWithEmailAndPassword = (email, password) =>
         this.auth.signInWithEmailAndPassword(email, password);
     doSignOut = () => this.auth.signOut();
-    user = uid => this.db.doc(`users/${uid}`);
+    user = uid => this.db.doc(`users/${uid}`); // tham chiếu đến người dùng bằng mã định danh (uid)
     users = () => this.db.collection('users');
 }
 

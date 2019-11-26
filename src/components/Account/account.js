@@ -1,27 +1,90 @@
 import React from 'react';
-import {AuthUserContext, withAuthorization} from '../Session';
+import {withAuthorization} from '../Session';
+import {Link} from "react-router-dom";
+import * as ROUTES from '../../constants/routes';
 
-const AccountPage = () => (
-    <AuthUserContext.Consumer>
-        {authUser => (
+class AccountPage extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            loading: false,
+            users: [],
+            key: '',
+        }
+    }
+
+    componentDidMount() {
+        this.setState({loading: true});
+        this.unsubscribe = this.props.firebase
+            .users()
+            .onSnapshot(snapshot => {
+                let users = [];
+                snapshot.forEach(doc =>
+                    users.push({
+                        ...doc.data(),
+                        key: doc.id,
+                    }),
+                );
+                this.setState({
+                    users,
+                    loading: false,
+                });
+            })
+    }
+
+    componentWillUnmount() {
+        this.unsubscribe();
+    }
+
+    delete(id) {
+        this.props.firebase.users().doc(id).delete().then(() => {
+            console.log("Document successfully deleted!");
+            this.props.history.push("/accounts")
+        }).catch((error) => {
+            console.error("Error removing document: ", error);
+        });
+    }
+
+    render() {
+        const {users} = this.state;
+        console.log(users);
+        return (
             <div className="container">
                 <table className="table">
                     <thead>
                     <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Email</th>
+                        <th scope="col">Id</th>
+                        <th scope="col">User Name</th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
                     </tr>
                     </thead>
-                    <tbody>
-                    <tr>
-                        <th scope="row">{authUser.uid}</th>
-                        <td>{authUser.email}</td>
-                    </tr>
-                    </tbody>
+                    {users.map(user => (
+                        <tbody>
+                        <tr>
+                            <th scope="row">{user.key}</th>
+                            <td>{user.username}</td>
+                            <td>
+                                <Link to={`/account/detail/${user.key}`} className="btn btn-secondary">Detail</Link>
+                            </td>
+                            <td>
+                                <Link to={`/account/edit/${user.key}`} className="btn btn-secondary">Edit</Link>
+                            </td>
+                            {/*<td>*/}
+                            {/*    <button type="submit" className="btn btn-danger">Delete</button>*/}
+                            {/*</td>*/}
+                            <td>
+                                <button onClick={this.delete.bind(this,this.state.key)} type="submit" className="btn btn-danger">Delete</button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    ))}
                 </table>
             </div>
-        )}
-    </AuthUserContext.Consumer>
-);
+        )
+    }
+}
+
 const condition = authUser => !!authUser;
 export default withAuthorization(condition)(AccountPage);

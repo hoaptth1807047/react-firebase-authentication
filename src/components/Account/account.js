@@ -2,6 +2,7 @@ import React from 'react';
 import {withAuthorization} from '../Session';
 import {Link} from "react-router-dom";
 import * as ROUTES from '../../constants/routes';
+import "../Form/form.css";
 
 class AccountPage extends React.Component {
     constructor(props) {
@@ -47,10 +48,6 @@ class AccountPage extends React.Component {
                 console.error("Error removing document: ", error);
             });
         }
-        //
-        // let users = [];
-        // if (users.filter(user => user.id !== id
-        // ))
     };
 
     render() {
@@ -58,6 +55,9 @@ class AccountPage extends React.Component {
         console.log(users);
         return (
             <div className="container">
+                <div>
+                    <Link to={ROUTES.CREATE} className="btn btn-create btn-success">Create</Link>
+                </div>
                 <table className="table">
                     <thead>
                     <tr>

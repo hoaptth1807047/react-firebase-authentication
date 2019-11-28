@@ -27,14 +27,14 @@ class DetailPage extends React.Component{
             }
         });
     }
-    delete(id) {
-        this.props.firebase.users().doc(id).delete().then(() => {
-            console.log("Document successfully deleted!");
-            this.props.history.push("/accounts")
-        }).catch((error) => {
-            console.error("Error removing document: ", error);
-        });
-    }
+    // delete(id) {
+    //     this.props.firebase.users().doc(id).delete().then(() => {
+    //         console.log("Document successfully deleted!");
+    //         this.props.history.push("/accounts")
+    //     }).catch((error) => {
+    //         console.error("Error removing document: ", error);
+    //     });
+    // }
     render() {
         return (
             <div className="container">
@@ -53,8 +53,8 @@ class DetailPage extends React.Component{
                             <dd>{this.state.user.email}</dd>
                         </dl>
                         <Link to={'/accounts'} className="btn btn-success"> Back</Link>&nbsp;
-                        <button onClick={this.delete.bind(this, this.state.key)} className="btn btn-danger">Delete
-                        </button>
+                        {/*<button onClick={this.delete.bind(this, this.state.key)} className="btn btn-danger">Delete*/}
+                        {/*</button>*/}
                     </div>
                 </div>
             </div>

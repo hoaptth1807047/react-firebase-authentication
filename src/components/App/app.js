@@ -9,6 +9,7 @@ import SignInPage from '../SignIn/sign-in';
 import HomePage from '../Home/home';
 import AdminPage from '../Admin/admin';
 import AccountPage from '../Account/account';
+import CreatePage from '../Account/create';
 import DetailPage from '../Account/detail';
 import EditPage from '../Account/edit';
 import UserPage from '../../test/user';
@@ -24,6 +25,7 @@ const App = () => (
             <Route path={ROUTES.SIGN_IN} component={SignInPage}/>
             <Route path={ROUTES.ADMIN} component={AdminPage}/>
             <Route path={ROUTES.ACCOUNT} component={AccountPage}/>
+            <Route path={ROUTES.CREATE} component={CreatePage}/>
             <Route path='/account/detail/:id' component={DetailPage}/>
             <Route path='/account/edit/:id' component={EditPage}/>
             <Route path={ROUTES.USER} component={UserPage}/>

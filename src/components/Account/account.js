@@ -36,14 +36,22 @@ class AccountPage extends React.Component {
         this.unsubscribe();
     }
 
-    delete(id) {
-        this.props.firebase.users().doc(id).delete().then(() => {
-            console.log("Document successfully deleted!");
-            this.props.history.push("/accounts")
-        }).catch((error) => {
-            console.error("Error removing document: ", error);
-        });
-    }
+    handleClick = key => {
+        const deleteRef = this.props.firebase.users().doc(key);
+        let users = [];
+        if (users.filter(user => user.key === key)) {
+            deleteRef.delete().then(() => {
+                console.log("Document successfully deleted!");
+                this.props.history.push("/accounts")
+            }).catch((error) => {
+                console.error("Error removing document: ", error);
+            });
+        }
+        //
+        // let users = [];
+        // if (users.filter(user => user.id !== id
+        // ))
+    };
 
     render() {
         const {users} = this.state;
@@ -61,7 +69,7 @@ class AccountPage extends React.Component {
                     </tr>
                     </thead>
                     {users.map(user => (
-                        <tbody>
+                        <tbody key={user.key}>
                         <tr>
                             <th scope="row">{user.key}</th>
                             <td>{user.username}</td>
@@ -75,7 +83,9 @@ class AccountPage extends React.Component {
                             {/*    <button type="submit" className="btn btn-danger">Delete</button>*/}
                             {/*</td>*/}
                             <td>
-                                <button onClick={this.delete.bind(this,this.state.key)} type="submit" className="btn btn-danger">Delete</button>
+                                <button onClick={() => this.handleClick(user.key)} type="submit"
+                                        className="btn btn-danger">Delete
+                                </button>
                             </td>
                         </tr>
                         </tbody>
